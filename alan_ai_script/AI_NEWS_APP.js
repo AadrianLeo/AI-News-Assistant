@@ -5,7 +5,7 @@ intent('What does this app do?','What can i do here?',
 //     p.play( { command: 'testCommand' } )
 // })
 
-const API_KEY = 'daa9b4ae18904045b38ec4238d292bc1';
+const API_KEY = 'NEWS_API_KEY_HERE';
 let savedArticals = [];
 
 // News by Source
