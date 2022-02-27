@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import alanBtn from "@alan-ai/alan-sdk-web";
+import wordsToNumbers from 'words-to-numbers';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import NewsCards from "./components/NewsCards/NewsCards";
+import useStyles from "./styles.js";
+
+const App = () => {
+    const [activeArticle, setActiveArticle] = useState(0);
+    const [newsArticals, setNewArticles] = useState([]);
+    
+    const classes = useStyles();
+
+    const alanKey = 'd8cad0afb41fe38a38c61341d910ef7c2e956eca572e1d8b807a3e2338fdd0dc/stage';
+
+    useEffect(() => {
+        alanBtn({
+            key: alanKey,
+            onCommand: ({ command, articles, number }) => {
+                if (command === 'newHeadlines') {
+                    setNewArticles(articles);
+                  setActiveArticle(-1);
+                } else if (command === 'highlight') {
+                  setActiveArticle((prevActiveArticle) => prevActiveArticle + 1);
+                } else if (command === 'open') {
+                  const parsedNumber = number.length > 2 ? wordsToNumbers((number), { fuzzy: true }) : number;
+                  const article = articles[parsedNumber - 1];
+        
+                  if (parsedNumber > articles.length) {
+                    alanBtn().playText('Please try that again...');
+                  } else if (article) {
+                    window.open(article.url, '_blank');
+                    alanBtn().playText('Opening...');
+                  } else {
+                    alanBtn().playText('Please try that again...');
+                  }
+                }
+              },
+            });
+          }, []);
+
+    return(
+        <div>
+            <div className={classes.logoContainer}>
+                <img src="https://voicebot.ai/wp-content/uploads/2019/10/alan.jpg" className={classes.alanLogo} alt="alan logo" />
+            </div>
+            <NewsCards articles={newsArticals} activeArticle={activeArticle} />
+        </div>
+    );
 }
 
 export default App;
