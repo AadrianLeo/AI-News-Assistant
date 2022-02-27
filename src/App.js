@@ -11,7 +11,7 @@ const App = () => {
     
     const classes = useStyles();
 
-    const alanKey = 'd8cad0afb41fe38a38c61341d910ef7c2e956eca572e1d8b807a3e2338fdd0dc/stage';
+    const alanKey = 'ALAN_AI_KEY_HERE';
 
     useEffect(() => {
         alanBtn({
